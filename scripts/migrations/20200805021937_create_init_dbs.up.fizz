@@ -1,0 +1,43 @@
+create_table("users") {
+  t.Column("username", "string", {"size": 20})
+  t.Column("name", "string", {"size": 30, "null": true})
+  t.Column("status", "string", {"default": "active"})
+  
+}
+
+add_index("users", "username", {"unique": true})
+
+create_table("credentials") {
+  t.ForeignKey("user_id", {"users": ["id"]}, {"on_delete": "cascade"})
+  t.Column("type", "string", {"null": true})
+  t.Column("key", "string", {"size": 100})
+  t.Column("value", "text", {"null": true})
+  t.Column("accessed_at", "timestamp", {})
+}
+
+add_index("credentials", "user_id", {})
+
+create_table("teams") {
+  t.Column("name", "string", {"limit": 20})
+  t.Column("slug", "string", {"limit": 50})
+}
+
+add_index("teams", "slug", {"unique": true})
+
+create_table("team_members") {
+  t.Column("user_id", "string", {"limit": 20})
+  t.Column("team_id", "string", {"limit": 50})
+  t.Column("user_level", "integer", {"default": 0})
+  t.ForeignKey("user_id", {"users": ["id"]}, {})
+  t.ForeignKey("team_id", {"teams": ["id"]}, {})
+}
+
+create_table("services") {
+  t.Column("name", "string", {"size": 100})
+  t.Column("user_id", "string", {"limit": 20})
+  t.Column("team_id", "string", {"limit": 50})
+  t.Column("user_level", "integer", {"default": 0})
+  t.ForeignKey("user_id", {"users": ["id"]}, {})
+  t.ForeignKey("team_id", {"teams": ["id"]}, {})
+  t.Column("type", "string", {"null": true})
+}
