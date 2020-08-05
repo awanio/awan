@@ -1,2 +1,2 @@
-# awan
-An open source Kubernetes base Platform as Services
+# Awan
+An open source Platform as Services base on Kubernetes
