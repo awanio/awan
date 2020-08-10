@@ -18,6 +18,7 @@ require (
 	github.com/gofrs/uuid v3.3.0+incompatible // indirect
 	github.com/gorilla/schema v1.1.0 // indirect
 	github.com/iris-contrib/formBinder v5.0.0+incompatible // indirect
+	github.com/jinzhu/gorm v1.9.15 // indirect
 	github.com/kataras/iris v11.1.1+incompatible
 	github.com/kataras/iris/v12 v12.1.8 // indirect
 	github.com/lib/pq v1.8.0 // indirect
