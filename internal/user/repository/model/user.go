@@ -1,11 +1,15 @@
 package model
 
 import (
-	"github.com/jinzhu/gorm"
+	"github.com/awanio/awan/pkg/database"
+	"github.com/gofrs/uuid"
 )
 
 // User data of struct
 type User struct {
-	gorm.Model
-	ID int `gorm:"column:id;AUTO_INCREMENT;PRIMARY_KEY"`
+	database.BaseModel
+	ID       uuid.UUID `gorm:"type:uuid;primary_key;"`
+	Name     string
+	Username string
+	Status   string
 }
