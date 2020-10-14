@@ -9,10 +9,30 @@ import (
 func main() {
 
 	app := iris.Default()
-	// app.Logger().SetLevel("debug")
+	app.Logger().SetLevel("debug")
 
 	// app.Use(recover.New())
 	// app.Use(logger.New())
+
+	// db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
+	// if err != nil {
+	// 	app.Logger().Fatalf("connect to sqlite3 failed")
+	// 	return
+	// }
+
+	// iris.RegisterOnInterrupt(func() {
+	// 	defer db.Close()
+	// })
+
+	// if os.Getenv("ENV") != "" {
+	// 	db.DropTableIfExists(&User{}) // drop table
+	// }
+	// db.AutoMigrate(&User{}) // create table: // AutoMigrate run auto migration for given models, will only add missing fields, won't delete/change current data
+
+	app.OnErrorCode(iris.StatusNotFound, func(ctx iris.Context) {
+		ctx.HTML("<b>Resource Not found</b>")
+		// ctx.ServeFile("../../web/public/index.html")
+	})
 
 	api := app.Party("/api")
 	{
@@ -21,6 +41,10 @@ func main() {
 		})
 
 	}
+
+	// app.Get("/{p:path}", func(ctx iris.Context) {
+	// 	ctx.ServeFile("../../web/public/index.html")
+	// })
 
 	app.HandleDir("/", iris.Dir("../../web/public"), iris.DirOptions{IndexName: "index.html"})
 
