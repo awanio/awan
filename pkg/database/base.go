@@ -8,7 +8,7 @@ import (
 // BaseModel contains common columns for all tables.
 type BaseModel struct {
 	gorm.Model
-	ID uuid.UUID `gorm:"type:uuid;primary_key;"`
+	ID uuid.UUID `gorm:"index:slug;column:id;type:uuid;primary_key;not null"`
 }
 
 // BeforeCreate will set a UUID rather than numeric ID.
@@ -17,5 +17,5 @@ func (base *BaseModel) BeforeCreate(scope *gorm.Scope) error {
 	if err != nil {
 		return err
 	}
-	return scope.SetColumn("ID", uuid)
+	return scope.SetColumn("id", uuid)
 }
