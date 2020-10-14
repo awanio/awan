@@ -36,7 +36,27 @@ func main() {
 
 	api := app.Party("/api")
 	{
-		api.Get("/", func(ctx iris.Context) {
+		api.Get("/register", func(ctx iris.Context) {
+			ctx.JSON(iris.Map{"message": "hello", "status": iris.StatusOK})
+		})
+
+		api.Get("/login", func(ctx iris.Context) {
+			ctx.JSON(iris.Map{"message": "hello", "status": iris.StatusOK})
+		})
+
+		api.Get("/users", func(ctx iris.Context) {
+			ctx.JSON(iris.Map{"message": "hello", "status": iris.StatusOK})
+		})
+
+		api.Get("/apps", func(ctx iris.Context) {
+			ctx.JSON(iris.Map{"message": "hello", "status": iris.StatusOK})
+		})
+
+		api.Get("/resources", func(ctx iris.Context) {
+			ctx.JSON(iris.Map{"message": "hello", "status": iris.StatusOK})
+		})
+
+		api.Get("/teams", func(ctx iris.Context) {
 			ctx.JSON(iris.Map{"message": "hello", "status": iris.StatusOK})
 		})
 
