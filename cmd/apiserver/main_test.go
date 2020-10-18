@@ -12,7 +12,7 @@ func TestNewApp(t *testing.T) {
 
 	e.GET("/").Expect().Status(httptest.StatusOK)
 	e.GET("/api/signup").Expect().Status(httptest.StatusOK)
-	e.GET("/api/login").Expect().Status(httptest.StatusOK)
+	e.GET("/api/signin").Expect().Status(httptest.StatusOK)
 	e.GET("/api/users").Expect().Status(httptest.StatusOK)
 	e.GET("/api/apps").Expect().Status(httptest.StatusOK)
 	e.GET("/api/resources").Expect().Status(httptest.StatusOK)

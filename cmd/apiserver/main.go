@@ -18,9 +18,6 @@ func newApp() *iris.Application {
 	app := iris.Default()
 	app.Logger().SetLevel("debug")
 
-	// app.Use(recover.New())
-	// app.Use(logger.New())
-
 	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
 	sqlDB, err := db.DB()
 
@@ -33,9 +30,6 @@ func newApp() *iris.Application {
 		defer sqlDB.Close()
 	})
 
-	// if os.Getenv("ENV") != "" {
-	// 	db.DropTableIfExists(&user.Users{}) // drop table
-	// }
 	// db.AutoMigrate(&user.Users{}, &user.Credentials{})
 
 	app.OnErrorCode(iris.StatusNotFound, func(ctx iris.Context) {
@@ -45,28 +39,12 @@ func newApp() *iris.Application {
 
 	api := app.Party("/api")
 	{
-		mvc.New(api.Party("/signup")).Handle(new(user.Controller))
-
-		api.Get("/login", func(ctx iris.Context) {
-			ctx.JSON(iris.Map{"message": "hello", "status": iris.StatusOK})
-		})
-
-		api.Get("/users", func(ctx iris.Context) {
-			ctx.JSON(iris.Map{"message": "hello", "status": iris.StatusOK})
-		})
-
-		api.Get("/apps", func(ctx iris.Context) {
-			ctx.JSON(iris.Map{"message": "hello", "status": iris.StatusOK})
-		})
-
-		api.Get("/resources", func(ctx iris.Context) {
-			ctx.JSON(iris.Map{"message": "hello", "status": iris.StatusOK})
-		})
-
-		api.Get("/teams", func(ctx iris.Context) {
-			ctx.JSON(iris.Map{"message": "hello", "status": iris.StatusOK})
-		})
-
+		mvc.New(api.Party("/signup")).Handle(new(user.Signup))
+		mvc.New(api.Party("/signin")).Handle(new(user.Signin))
+		mvc.New(api.Party("/users")).Handle(new(user.Controller))
+		mvc.New(api.Party("/apps")).Handle(new(user.Controller))
+		mvc.New(api.Party("/resources")).Handle(new(user.Controller))
+		mvc.New(api.Party("/teams")).Handle(new(user.Controller))
 	}
 
 	// app.Get("/{p:path}", func(ctx iris.Context) {
