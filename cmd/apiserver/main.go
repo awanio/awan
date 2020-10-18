@@ -1,12 +1,19 @@
 package main
 
 import (
+	"fmt"
 	"os"
+	"path/filepath"
+	"runtime"
 
+	"github.com/awanio/awan/internal/user"
 	"github.com/kataras/iris/v12"
+	"github.com/kataras/iris/v12/mvc"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
-func main() {
+func newApp() *iris.Application {
 
 	app := iris.Default()
 	app.Logger().SetLevel("debug")
@@ -14,20 +21,23 @@ func main() {
 	// app.Use(recover.New())
 	// app.Use(logger.New())
 
-	// db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
-	// if err != nil {
-	// 	app.Logger().Fatalf("connect to sqlite3 failed")
-	// 	return
-	// }
+	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
+	sqlDB, err := db.DB()
 
-	// iris.RegisterOnInterrupt(func() {
-	// 	defer db.Close()
-	// })
+	if err != nil {
+		app.Logger().Fatalf("connect to sqlite3 failed")
+		return nil
+	}
+
+	iris.RegisterOnInterrupt(func() {
+		defer sqlDB.Close()
+	})
 
 	// if os.Getenv("ENV") != "" {
-	// 	db.DropTableIfExists(&User{}) // drop table
+	// 	db.DropTableIfExists(&user.Users{}) // drop table
 	// }
-	// db.AutoMigrate(&User{}) // create table: // AutoMigrate run auto migration for given models, will only add missing fields, won't delete/change current data
+	db.AutoMigrate(&user.Users{})
+	db.AutoMigrate(&user.Credentials{})
 
 	app.OnErrorCode(iris.StatusNotFound, func(ctx iris.Context) {
 		ctx.HTML("<b>Resource Not found</b>")
@@ -36,9 +46,11 @@ func main() {
 
 	api := app.Party("/api")
 	{
-		api.Get("/register", func(ctx iris.Context) {
-			ctx.JSON(iris.Map{"message": "hello", "status": iris.StatusOK})
-		})
+		mvc.New(app.Party("/signup")).Handle(new(user.Controller))
+
+		// api.Get("/signup", func(ctx iris.Context) {
+		// 	ctx.JSON(iris.Map{"message": "hello", "status": iris.StatusOK})
+		// })
 
 		api.Get("/login", func(ctx iris.Context) {
 			ctx.JSON(iris.Map{"message": "hello", "status": iris.StatusOK})
@@ -66,8 +78,20 @@ func main() {
 	// 	ctx.ServeFile("../../web/public/index.html")
 	// })
 
+	_, b, _, _ := runtime.Caller(0)
+	basepath := filepath.Dir(b)
+	fmt.Println("basepath")
+	fmt.Println(b)
+	fmt.Println(basepath)
+
 	app.HandleDir("/", iris.Dir("../../web/public"), iris.DirOptions{IndexName: "index.html"})
 
+	return app
+
+}
+
+func main() {
+	app := newApp()
 	port := ":8081"
 	if s := os.Getenv("PORT"); s != "" {
 		port = ":" + s

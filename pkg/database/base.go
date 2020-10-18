@@ -8,7 +8,7 @@ import (
 // BaseModel contains common columns for all tables.
 type BaseModel struct {
 	gorm.Model
-	ID uuid.UUID `gorm:"index:slug;column:id;type:uuid;primary_key;not null"`
+	ID uuid.UUID `gorm:"index:id;column:id;type:uuid;primary_key;not null"`
 }
 
 // BeforeCreate will set a UUID rather than numeric ID.
