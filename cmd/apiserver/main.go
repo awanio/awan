@@ -6,9 +6,7 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/awanio/awan/internal/user"
 	"github.com/kataras/iris/v12"
-	"github.com/kataras/iris/v12/mvc"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -36,8 +34,7 @@ func newApp() *iris.Application {
 	// if os.Getenv("ENV") != "" {
 	// 	db.DropTableIfExists(&user.Users{}) // drop table
 	// }
-	db.AutoMigrate(&user.Users{})
-	db.AutoMigrate(&user.Credentials{})
+	// db.AutoMigrate(&user.Users{}, &user.Credentials{})
 
 	app.OnErrorCode(iris.StatusNotFound, func(ctx iris.Context) {
 		ctx.HTML("<b>Resource Not found</b>")
@@ -46,11 +43,11 @@ func newApp() *iris.Application {
 
 	api := app.Party("/api")
 	{
-		mvc.New(app.Party("/signup")).Handle(new(user.Controller))
+		// mvc.New(app.Party("/signup")).Handle(new(user.Controller))
 
-		// api.Get("/signup", func(ctx iris.Context) {
-		// 	ctx.JSON(iris.Map{"message": "hello", "status": iris.StatusOK})
-		// })
+		api.Get("/signup", func(ctx iris.Context) {
+			ctx.JSON(iris.Map{"message": "hello", "status": iris.StatusOK})
+		})
 
 		api.Get("/login", func(ctx iris.Context) {
 			ctx.JSON(iris.Map{"message": "hello", "status": iris.StatusOK})
