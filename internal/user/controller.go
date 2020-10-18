@@ -1,6 +1,6 @@
 package user
 
-// Controller serves the "/", "/ping" and "/hello".
+// Controller users
 type Controller struct{}
 
 // Get method

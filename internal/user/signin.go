@@ -1,6 +1,6 @@
 package user
 
-// Signin serves the "/", "/ping" and "/hello".
+// Signin controller
 type Signin struct{}
 
 // Get method

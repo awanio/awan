@@ -1,6 +1,6 @@
 package user
 
-// Signup serves the "/", "/ping" and "/hello".
+// Signup controller
 type Signup struct{}
 
 // Get method
