@@ -30,7 +30,12 @@ func newApp() *iris.Application {
 		defer sqlDB.Close()
 	})
 
-	// db.AutoMigrate(&user.Users{}, &user.Credentials{})
+	err = db.AutoMigrate(&user.Users{}, &user.Credentials{})
+
+	if err != nil {
+		app.Logger().Fatalf(err.Error())
+		return nil
+	}
 
 	app.OnErrorCode(iris.StatusNotFound, func(ctx iris.Context) {
 		ctx.HTML("<b>Resource Not found</b>")

@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/awanio/awan/pkg/database"
+	"github.com/gofrs/uuid"
 )
 
 // Users data of struct
@@ -32,8 +33,8 @@ type Input struct {
 // Credentials [...]
 type Credentials struct {
 	database.BaseModel
-	UserID           int       `gorm:"index:user_id;column:user_id;type:int(11);not null"`
-	Users            Users     `gorm:"association_foreignkey:user_id;foreignkey:ID"`
+	UserID           uuid.UUID `gorm:"index:user_id;column:user_id;type:uuid;not null"`
+	Users            Users     `gorm:"association_foreignkey:user_id;foreignkey:id"`
 	Type             string    `gorm:"column:type;type:varchar(20);not null"` // 'password','email','phone','sshkey','vendor','fingerprint'
 	UserKey          string    `gorm:"column:user_key;type:text"`
 	UserValue        string    `gorm:"column:user_value;type:text"`
