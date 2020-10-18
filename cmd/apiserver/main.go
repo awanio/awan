@@ -6,7 +6,9 @@ import (
 	"path/filepath"
 	"runtime"
 
+	"github.com/awanio/awan/internal/user"
 	"github.com/kataras/iris/v12"
+	"github.com/kataras/iris/v12/mvc"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -43,11 +45,7 @@ func newApp() *iris.Application {
 
 	api := app.Party("/api")
 	{
-		// mvc.New(app.Party("/signup")).Handle(new(user.Controller))
-
-		api.Get("/signup", func(ctx iris.Context) {
-			ctx.JSON(iris.Map{"message": "hello", "status": iris.StatusOK})
-		})
+		mvc.New(api.Party("/signup")).Handle(new(user.Controller))
 
 		api.Get("/login", func(ctx iris.Context) {
 			ctx.JSON(iris.Map{"message": "hello", "status": iris.StatusOK})
@@ -81,7 +79,7 @@ func newApp() *iris.Application {
 	fmt.Println(b)
 	fmt.Println(basepath)
 
-	app.HandleDir("/", iris.Dir("../../web/public"), iris.DirOptions{IndexName: "index.html"})
+	app.HandleDir("/", "../../web/public", iris.DirOptions{IndexName: "index.html"})
 
 	return app
 
