@@ -44,7 +44,7 @@ func newApp() *iris.Application {
 
 	api := app.Party("/api")
 	{
-		mvc.New(api.Party("/signup")).Handle(new(user.Signup))
+		mvc.New(api.Party("/signup")).Register(db).Handle(new(user.Signup))
 		mvc.New(api.Party("/signin")).Handle(new(user.Signin))
 		mvc.New(api.Party("/users")).Handle(new(user.Controller))
 		mvc.New(api.Party("/apps")).Handle(new(user.Controller))
@@ -62,7 +62,7 @@ func newApp() *iris.Application {
 	fmt.Println(b)
 	fmt.Println(basepath)
 
-	app.HandleDir("/", "../../web/public", iris.DirOptions{IndexName: "index.html"})
+	app.HandleDir("/", iris.Dir("../../web/public"), iris.DirOptions{IndexName: "index.html"})
 
 	return app
 

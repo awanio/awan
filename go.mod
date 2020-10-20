@@ -3,13 +3,18 @@ module github.com/awanio/awan
 go 1.14
 
 require (
+	github.com/CloudyKit/jet/v3 v3.0.0 // indirect
 	github.com/CloudyKit/jet/v5 v5.0.3 // indirect
+	github.com/Joker/hpp v1.0.0 // indirect
 	github.com/Joker/jade v1.0.0 // indirect
 	github.com/andybalholm/brotli v1.0.1 // indirect
 	github.com/cockroachdb/cockroach-go v2.0.1+incompatible // indirect
+	github.com/dgraph-io/badger v1.6.0 // indirect
 	github.com/dgraph-io/badger/v2 v2.2007.2 // indirect
+	github.com/etcd-io/bbolt v1.3.3 // indirect
 	github.com/flosch/pongo2 v0.0.0-20200529170236-5abacdfa4915 // indirect
 	github.com/flosch/pongo2/v4 v4.0.0 // indirect
+	github.com/gavv/httpexpect v2.0.0+incompatible // indirect
 	github.com/go-redis/redis/v8 v8.2.3 // indirect
 	github.com/gobuffalo/attrs v1.0.0 // indirect
 	github.com/gobuffalo/envy v1.9.0 // indirect
@@ -21,20 +26,23 @@ require (
 	github.com/gobuffalo/pop/v5 v5.2.3 // indirect
 	github.com/gobuffalo/validate v2.0.4+incompatible // indirect
 	github.com/gofrs/uuid v3.3.0+incompatible
+	github.com/gomodule/redigo v1.7.1-0.20190724094224-574c33c3df38 // indirect
 	github.com/google/uuid v1.1.2 // indirect
 	github.com/gookit/color v1.3.1 // indirect
 	github.com/gorilla/schema v1.1.0 // indirect
 	github.com/hashicorp/go-version v1.2.1 // indirect
+	github.com/iris-contrib/blackfriday v2.0.0+incompatible // indirect
 	github.com/iris-contrib/formBinder v5.0.0+incompatible // indirect
 	github.com/iris-contrib/httpexpect/v2 v2.0.5 // indirect
 	github.com/iris-contrib/jade v1.1.4 // indirect
+	github.com/iris-contrib/pongo2 v0.0.1 // indirect
 	github.com/iris-contrib/schema v0.0.6 // indirect
 	github.com/jinzhu/gorm v1.9.16
 	github.com/json-iterator/go v1.1.10 // indirect
 	github.com/kataras/blocks v0.0.4 // indirect
 	github.com/kataras/golog v0.1.5 // indirect
 	github.com/kataras/iris v11.1.1+incompatible
-	github.com/kataras/iris/v12 v12.1.8
+	github.com/kataras/iris/v12 v12.2.0-alpha.0.20201018152601-b335ab9c78d2
 	github.com/kataras/neffos v0.0.16 // indirect
 	github.com/kataras/tunnel v0.0.2 // indirect
 	github.com/klauspost/compress v1.11.1 // indirect
@@ -43,6 +51,7 @@ require (
 	github.com/microcosm-cc/bluemonday v1.0.4 // indirect
 	github.com/moul/http2curl v1.0.0 // indirect
 	github.com/nicksnyder/go-i18n/v2 v2.1.1 // indirect
+	github.com/ryanuber/columnize v2.1.0+incompatible // indirect
 	github.com/square/go-jose/v3 v3.0.0-20200630053402-0a67ce9b0693 // indirect
 	github.com/tdewolff/minify/v2 v2.9.7 // indirect
 	github.com/valyala/fasthttp v1.16.0 // indirect
