@@ -5,10 +5,12 @@ import (
 )
 
 // Controller users
-type Controller struct{}
+type Controller struct {
+	DB *gorm.DB
+}
 
 // Get method
-func (m *Controller) Get(db *gorm.DB) interface{} {
+func (m *Controller) Get() interface{} {
 
 	return map[string]string{"message": "Hello Iris!"}
 }

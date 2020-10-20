@@ -45,11 +45,11 @@ func newApp() *iris.Application {
 	api := app.Party("/api")
 	{
 		mvc.New(api.Party("/signup")).Register(db).Handle(new(user.Signup))
-		mvc.New(api.Party("/signin")).Handle(new(user.Signin))
-		mvc.New(api.Party("/users")).Handle(new(user.Controller))
-		mvc.New(api.Party("/apps")).Handle(new(user.Controller))
-		mvc.New(api.Party("/resources")).Handle(new(user.Controller))
-		mvc.New(api.Party("/teams")).Handle(new(user.Controller))
+		mvc.New(api.Party("/signin")).Register(db).Handle(new(user.Signin))
+		mvc.New(api.Party("/users")).Register(db).Handle(new(user.Controller))
+		mvc.New(api.Party("/apps")).Register(db).Handle(new(user.Controller))
+		mvc.New(api.Party("/resources")).Register(db).Handle(new(user.Controller))
+		mvc.New(api.Party("/teams")).Register(db).Handle(new(user.Controller))
 	}
 
 	// app.Get("/{p:path}", func(ctx iris.Context) {

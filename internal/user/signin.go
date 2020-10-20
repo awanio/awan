@@ -1,7 +1,11 @@
 package user
 
+import "gorm.io/gorm"
+
 // Signin controller
-type Signin struct{}
+type Signin struct {
+	DB *gorm.DB
+}
 
 // Get method
 func (m *Signin) Get() interface{} {
