@@ -15,6 +15,7 @@ require (
 	github.com/flosch/pongo2 v0.0.0-20200529170236-5abacdfa4915 // indirect
 	github.com/flosch/pongo2/v4 v4.0.0 // indirect
 	github.com/gavv/httpexpect v2.0.0+incompatible // indirect
+	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible // indirect
 	github.com/go-redis/redis/v8 v8.2.3 // indirect
 	github.com/gobuffalo/attrs v1.0.0 // indirect
 	github.com/gobuffalo/envy v1.9.0 // indirect
