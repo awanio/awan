@@ -1,3 +1,5 @@
+// Part of this code credit to https://github.com/gogs/gogs
+// This code modify from original code https://github.com/gogs/gogs/blob/main/internal/conf/static.go
 // Copyright 2020 The Gogs Authors. All rights reserved.
 // Use of this source code is governed by a MIT-style
 // license that can be found in the LICENSE file.
@@ -11,7 +13,7 @@ type DatabaseOpts struct {
 	Name         string
 	User         string
 	Password     string
-	SSLMode      string `ini:"SSL_MODE"`
+	SSLMode      string
 	Path         string
 	MaxOpenConns int
 	MaxIdleConns int

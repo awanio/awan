@@ -1,3 +1,5 @@
+// Part of this code credit to https://github.com/gogs/gogs
+// This code modify from original code https://github.com/gogs/gogs/blob/main/internal/db/db.go
 // Copyright 2020 The Gogs Authors. All rights reserved.
 // Use of this source code is governed by a MIT-style
 // license that can be found in the https://github.com/gogs/gogs/blob/main/LICENSE link.
@@ -12,6 +14,7 @@ import (
 	"time"
 
 	"github.com/awanio/awan/configs"
+	"github.com/awanio/awan/internal/env"
 	"github.com/pkg/errors"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
@@ -93,23 +96,6 @@ func parseDSN(opts configs.DatabaseOpts) (dsn string, err error) {
 	return dsn, nil
 }
 
-// func newLogWriter() (logger.Writer, error) {
-// 	sec := configs.File.Section("log.gorm")
-// 	w, err := log.NewFileWriter(
-// 		filepath.Join(configs.Log.RootPath, "gorm.log"),
-// 		log.FileRotationConfig{
-// 			Rotate:  sec.Key("ROTATE").MustBool(true),
-// 			Daily:   sec.Key("ROTATE_DAILY").MustBool(true),
-// 			MaxSize: sec.Key("MAX_SIZE").MustInt64(100) * 1024 * 1024,
-// 			MaxDays: sec.Key("MAX_DAYS").MustInt64(3),
-// 		},
-// 	)
-// 	if err != nil {
-// 		return nil, errors.Wrap(err, `create "gorm.log"`)
-// 	}
-// 	return &dbutil.Logger{Writer: w}, nil
-// }
-
 func openDB(opts configs.DatabaseOpts, cfg *gorm.Config) (*gorm.DB, error) {
 	dsn, err := parseDSN(opts)
 	if err != nil {
@@ -146,10 +132,10 @@ func Run() (*gorm.DB, *sql.DB, error) {
 
 	// My config option
 	var database configs.DatabaseOpts
-	database.Type = "sqlite3"
-	database.Path = "test.db"
-	database.MaxOpenConns = 30
-	database.MaxIdleConns = 30
+	database.Type = env.DBType
+	database.Path = env.DBPath
+	database.MaxOpenConns = env.DBMaxOpenConns
+	database.MaxIdleConns = env.DBMaxIdleConns
 
 	db, err := openDB(database, &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{

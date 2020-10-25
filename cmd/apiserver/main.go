@@ -7,10 +7,16 @@ import (
 	"runtime"
 
 	"github.com/awanio/awan/internal/db"
+	"github.com/awanio/awan/internal/env"
 	"github.com/awanio/awan/internal/user"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
 )
+
+func init() {
+	envFileName := ".env.example"
+	env.Load(envFileName)
+}
 
 func newApp() *iris.Application {
 
