@@ -5,6 +5,7 @@
 package db
 
 import (
+	"database/sql"
 	"fmt"
 	"net/url"
 	"strings"
@@ -140,21 +141,17 @@ func openDB(opts configs.DatabaseOpts, cfg *gorm.Config) (*gorm.DB, error) {
 // 	new(LFSObject), new(LoginSource),
 // }
 
-// Init method
-func Init() (*gorm.DB, error) {
-	// level := logger.Info
+// Run method
+func Run() (*gorm.DB, *sql.DB, error) {
 
-	// if configs.IsProdMode() {
-	// 	level = logger.Warn
-	// }
+	// My config option
+	var database configs.DatabaseOpts
+	database.Type = "sqlite3"
+	database.Path = "test.db"
+	database.MaxOpenConns = 30
+	database.MaxIdleConns = 30
 
-	// NOTE: AutoMigrate does not respect logger passed in gorm.Config.
-	// logger.Default = logger.New(w, logger.Config{
-	// 	SlowThreshold: 100 * time.Millisecond,
-	// 	LogLevel:      level,
-	// })
-
-	db, err := openDB(configs.Database, &gorm.Config{
+	db, err := openDB(database, &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true,
 		},
@@ -163,18 +160,18 @@ func Init() (*gorm.DB, error) {
 		},
 	})
 	if err != nil {
-		return nil, errors.Wrap(err, "open database")
+		return nil, nil, errors.Wrap(err, "open database")
 	}
 
 	sqlDB, err := db.DB()
 	if err != nil {
-		return nil, errors.Wrap(err, "get underlying *sql.DB")
+		return nil, nil, errors.Wrap(err, "get underlying *sql.DB")
 	}
-	sqlDB.SetMaxOpenConns(configs.Database.MaxOpenConns)
-	sqlDB.SetMaxIdleConns(configs.Database.MaxIdleConns)
+	sqlDB.SetMaxOpenConns(database.MaxOpenConns)
+	sqlDB.SetMaxIdleConns(database.MaxIdleConns)
 	sqlDB.SetConnMaxLifetime(time.Minute)
 
-	switch configs.Database.Type {
+	switch database.Type {
 	case "postgres":
 		configs.UsePostgreSQL = true
 	case "mysql":
@@ -191,35 +188,5 @@ func Init() (*gorm.DB, error) {
 		panic("unreachable")
 	}
 
-	// NOTE: GORM has problem detecting existing columns, see https://github.com/gogs/gogs/issues/6091.
-	// Therefore only use it to create new tables, and do customized migration with future changes.
-
-	// for _, table := range Tables {
-	// 	if db.Migrator().HasTable(table) {
-	// 		continue
-	// 	}
-
-	// 	name := strings.TrimPrefix(fmt.Sprintf("%T", table), "*db.")
-	// 	err = db.Migrator().AutoMigrate(table)
-	// 	if err != nil {
-	// 		return nil, errors.Wrapf(err, "auto migrate %q", name)
-	// 	}
-	// 	// log.Trace("Auto migrated %q", name)
-	// }
-
-	// sourceFiles, err := loadLoginSourceFiles(filepath.Join(conf.CustomDir(), "conf", "auth.d"), db.NowFunc)
-	// if err != nil {
-	// 	return nil, errors.Wrap(err, "load login source files")
-	// }
-
-	// // Initialize stores, sorted in alphabetical order.
-	// AccessTokens = &accessTokens{DB: db}
-	// LoginSources = &loginSources{DB: db, files: sourceFiles}
-	// LFS = &lfs{DB: db}
-	// Perms = &perms{DB: db}
-	// Repos = &repos{DB: db}
-	// TwoFactors = &twoFactors{DB: db}
-	// Users = &users{DB: db}
-
-	return db, nil
+	return db, sqlDB, nil
 }

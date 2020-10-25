@@ -6,11 +6,10 @@ import (
 	"path/filepath"
 	"runtime"
 
+	"github.com/awanio/awan/internal/db"
 	"github.com/awanio/awan/internal/user"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
 )
 
 func newApp() *iris.Application {
@@ -18,8 +17,7 @@ func newApp() *iris.Application {
 	app := iris.Default()
 	app.Logger().SetLevel("debug")
 
-	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
-	sqlDB, err := db.DB()
+	connectedDB, sqlDB, err := db.Run()
 
 	if err != nil {
 		app.Logger().Fatalf("connect to sqlite3 failed")
@@ -30,7 +28,7 @@ func newApp() *iris.Application {
 		defer sqlDB.Close()
 	})
 
-	err = db.AutoMigrate(&user.Users{}, &user.Credentials{})
+	err = connectedDB.AutoMigrate(&user.Users{}, &user.Credentials{})
 
 	if err != nil {
 		app.Logger().Fatalf(err.Error())
@@ -44,12 +42,12 @@ func newApp() *iris.Application {
 
 	api := app.Party("/api")
 	{
-		mvc.New(api.Party("/signup")).Register(db).Handle(new(user.Signup))
-		mvc.New(api.Party("/signin")).Register(db).Handle(new(user.Signin))
-		mvc.New(api.Party("/users")).Register(db).Handle(new(user.Controller))
-		mvc.New(api.Party("/apps")).Register(db).Handle(new(user.Controller))
-		mvc.New(api.Party("/resources")).Register(db).Handle(new(user.Controller))
-		mvc.New(api.Party("/teams")).Register(db).Handle(new(user.Controller))
+		mvc.New(api.Party("/signup")).Register(connectedDB).Handle(new(user.Signup))
+		mvc.New(api.Party("/signin")).Register(connectedDB).Handle(new(user.Signin))
+		mvc.New(api.Party("/users")).Register(connectedDB).Handle(new(user.Controller))
+		mvc.New(api.Party("/apps")).Register(connectedDB).Handle(new(user.Controller))
+		mvc.New(api.Party("/resources")).Register(connectedDB).Handle(new(user.Controller))
+		mvc.New(api.Party("/teams")).Register(connectedDB).Handle(new(user.Controller))
 	}
 
 	// app.Get("/{p:path}", func(ctx iris.Context) {
