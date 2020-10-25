@@ -40,6 +40,7 @@ require (
 	github.com/iris-contrib/pongo2 v0.0.1 // indirect
 	github.com/iris-contrib/schema v0.0.6 // indirect
 	github.com/jinzhu/gorm v1.9.16
+	github.com/joho/godotenv v1.3.0
 	github.com/json-iterator/go v1.1.10 // indirect
 	github.com/kataras/blocks v0.0.4 // indirect
 	github.com/kataras/golog v0.1.5 // indirect
