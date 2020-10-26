@@ -1,6 +1,23 @@
 package helper
 
-import "crypto/rand"
+import (
+	"crypto/rand"
+	"fmt"
+	"path/filepath"
+	"runtime"
+)
+
+var basepath string
+
+// FromBasepath return to main dir
+func FromBasepath(file string) string {
+	return fmt.Sprintf("%s/../../%s", basepath, file)
+}
+
+func init() {
+	_, b, _, _ := runtime.Caller(0)
+	basepath = filepath.Dir(b)
+}
 
 // GenerateRandomString func
 func GenerateRandomString(n int) (string, error) {

@@ -14,7 +14,6 @@ import (
 	"time"
 
 	"github.com/awanio/awan/configs"
-	"github.com/awanio/awan/internal/env"
 	"github.com/pkg/errors"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
@@ -127,15 +126,8 @@ func openDB(opts configs.DatabaseOpts, cfg *gorm.Config) (*gorm.DB, error) {
 // 	new(LFSObject), new(LoginSource),
 // }
 
-// Run method
-func Run() (*gorm.DB, *sql.DB, error) {
-
-	// My config option
-	var database configs.DatabaseOpts
-	database.Type = env.DBType
-	database.Path = env.DBPath
-	database.MaxOpenConns = env.DBMaxOpenConns
-	database.MaxIdleConns = env.DBMaxIdleConns
+// Factory method
+func Factory(database configs.DatabaseOpts) (*gorm.DB, *sql.DB, error) {
 
 	db, err := openDB(database, &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
