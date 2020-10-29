@@ -3,14 +3,12 @@ package user
 import (
 	"net/http"
 
-	"github.com/awanio/awan/pkg/helper"
 	"github.com/kataras/iris/v12"
-	"gorm.io/gorm"
 )
 
 // Signin controller
 type Signin struct {
-	DB *gorm.DB
+	Repo RepositoryUsers
 }
 
 // Get method
@@ -22,43 +20,33 @@ func (m *Signin) Get() interface{} {
 // Post method
 func (m *Signin) Post(ctx iris.Context) {
 
-	verificationCode, _ := helper.GenerateRandomString(8)
-	forgotPasswordCode, _ := helper.GenerateRandomString(8)
+	var login Login
 
-	err := m.DB.Create(&Users{
-		Username:           "test_" + verificationCode,
-		Name:               "Iskandar Soesman",
-		Status:             "active",
-		VerificationCode:   verificationCode,
-		ForgotPasswordCode: forgotPasswordCode,
-	})
-
-	if err != nil {
-		println(err.Error)
-
+	if err := ctx.ReadJSON(&login); err != nil {
+		ctx.StopWithError(iris.StatusBadRequest, err)
+		return
 	}
 
-	var createdUser Users
+	me, token, status, er := m.Repo.Authenticate(login.Username, login.Password)
 
-	if err := m.DB.First(&createdUser, "username = ?", "k4ndar"); err == nil {
-		println(err.Error)
-		// app.Logger().Fatalf("created one record failed: %s", err.Error)
-
+	if er != nil {
 		ctx.JSON(iris.Map{
 			"code":  http.StatusBadRequest,
-			"error": err.Error,
+			"error": er.Error,
 		})
+	}
 
+	if !status {
+		ctx.JSON(iris.Map{
+			"code":  http.StatusUnauthorized,
+			"error": "login fail",
+		})
 	}
 
 	ctx.JSON(
 		iris.Map{
-			"code": http.StatusOK,
-			"data": Input{
-				Username: createdUser.Username,
-				Name:     createdUser.Name,
-				Email:    "k4ndar@yahoo.com",
-				Password: createdUser.VerificationCode,
-			},
+			"code":  http.StatusOK,
+			"data":  me,
+			"token": token,
 		})
 }

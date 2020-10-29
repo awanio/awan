@@ -45,3 +45,9 @@ type Credentials struct {
 	LastAccessedDate time.Time `gorm:"column:last_accessed_date;type:datetime;not null"`
 	Desc             string    `gorm:"column:desc;type:text"`
 }
+
+// Login ...
+type Login struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}

@@ -67,7 +67,7 @@ func newApp() *iris.Application {
 
 	api := app.Party("/api")
 	{
-		mvc.New(api.Party("/signin")).Register(runtime.DB).Handle(new(user.Signin))
+		mvc.New(api.Party("/signin")).Register(userRepository).Handle(new(user.Signin))
 		mvc.New(api.Party("/users")).Register(userRepository).Handle(new(user.Controller))
 		mvc.New(api.Party("/apps")).Register(runtime.DB).Handle(new(user.Controller))
 		mvc.New(api.Party("/resources")).Register(runtime.DB).Handle(new(user.Controller))

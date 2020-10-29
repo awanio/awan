@@ -25,7 +25,7 @@ func (m *Controller) Get(ctx iris.Context) {
 	if err != nil {
 		ctx.JSON(iris.Map{
 			"code":  http.StatusBadRequest,
-			"error": err.Error(),
+			"error": err.Error,
 		})
 	}
 

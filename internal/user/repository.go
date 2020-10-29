@@ -16,6 +16,7 @@ type RepositoryUser struct {
 // RepositoryUsers ...
 type RepositoryUsers interface {
 	Get() (user Users, err error)
+	Authenticate(string, string) (Users, string, bool, error)
 }
 
 // NewRepository ...
@@ -29,10 +30,12 @@ func (m *RepositoryUser) Get() (Users, error) {
 
 	var existingUser Users
 
-	err := m.DB.First(&existingUser)
+	result := m.DB.First(&existingUser)
 
-	if err != nil {
-		return existingUser, err.Error
+	if result.Error != nil {
+		println("error")
+		println(result.Error)
+		return existingUser, result.Error
 	}
 
 	return existingUser, nil
