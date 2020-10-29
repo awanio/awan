@@ -26,6 +26,11 @@ func newApp() *iris.Application {
 		defer runtime.SQLDB.Close()
 	})
 
+	app.OnErrorCode(iris.StatusNotFound, func(ctx iris.Context) {
+		ctx.HTML("<b>Resource Not found</b>")
+		// ctx.ServeFile("../../web/public/index.html")
+	})
+
 	err := runtime.DB.AutoMigrate(&user.Users{}, &user.Credentials{})
 
 	if err != nil {
@@ -33,14 +38,19 @@ func newApp() *iris.Application {
 		return nil
 	}
 
-	app.OnErrorCode(iris.StatusNotFound, func(ctx iris.Context) {
-		ctx.HTML("<b>Resource Not found</b>")
-		// ctx.ServeFile("../../web/public/index.html")
-	})
-
 	userRepository := user.NewRepository(runtime.DB)
-	me, _ := userRepository.Get()
-	println(me.Name)
+	// Generate admin user
+	admin, creationStatus, err := userRepository.CreateAdmin()
+
+	if err != nil {
+		app.Logger().Fatalf(err.Error())
+		return nil
+	}
+
+	if creationStatus {
+		app.Logger().Info("admin password: ", admin["adminPassword"])
+		app.Logger().Info("admin username: ", admin["adminUsername"])
+	}
 
 	api := app.Party("/api")
 	{
