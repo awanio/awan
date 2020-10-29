@@ -38,11 +38,15 @@ func newApp() *iris.Application {
 		// ctx.ServeFile("../../web/public/index.html")
 	})
 
+	userRepository := user.NewRepository(runtime.DB)
+	me, _ := userRepository.Get()
+	println(me.Name)
+
 	api := app.Party("/api")
 	{
 		mvc.New(api.Party("/signup")).Register(runtime.DB).Handle(new(user.Signup))
 		mvc.New(api.Party("/signin")).Register(runtime.DB).Handle(new(user.Signin))
-		mvc.New(api.Party("/users")).Register(runtime.DB).Handle(new(user.Controller))
+		mvc.New(api.Party("/users")).Register(userRepository).Handle(new(user.Controller))
 		mvc.New(api.Party("/apps")).Register(runtime.DB).Handle(new(user.Controller))
 		mvc.New(api.Party("/resources")).Register(runtime.DB).Handle(new(user.Controller))
 		mvc.New(api.Party("/teams")).Register(runtime.DB).Handle(new(user.Controller))
