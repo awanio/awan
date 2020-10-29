@@ -2,6 +2,7 @@ package user
 
 import (
 	"github.com/awanio/awan/pkg/helper"
+	"github.com/iris-contrib/middleware/jwt"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
@@ -93,4 +94,53 @@ func (m *RepositoryUser) CreateAdmin() (map[string]string, bool, error) {
 	}
 
 	return resp, true, nil
+}
+
+// GetByUsername ...
+func (m *RepositoryUser) GetByUsername(username string) (Users, error) {
+
+	var existingUser Users
+
+	result := m.DB.Where("username = ?", username).First(&existingUser)
+
+	if result.Error != nil {
+		return existingUser, result.Error
+	}
+
+	return existingUser, nil
+}
+
+// Authenticate method
+func (m *RepositoryUser) Authenticate(username string, password string) (Users, string, bool, error) {
+
+	existingUser, err := m.GetByUsername(username)
+
+	if err != nil {
+		return existingUser, "", false, err
+	}
+
+	var credential Credentials
+
+	result := m.DB.Where("user_id = ? and type = ?", existingUser.ID, "password").First(&credential)
+
+	if result.Error != nil {
+		return existingUser, "", false, result.Error
+	}
+
+	jwtToken, _ := m.CreateToken(existingUser)
+
+	return existingUser, jwtToken, true, nil
+}
+
+// CreateToken ...
+func (m *RepositoryUser) CreateToken(user Users) (string, error) {
+
+	token := jwt.NewTokenWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"id":       user.ID,
+		"username": user.Username,
+	})
+
+	// Sign and get the complete encoded token as a string using the secret
+	return token.SignedString([]byte("My Secret"))
+
 }

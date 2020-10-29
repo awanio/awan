@@ -52,9 +52,21 @@ func newApp() *iris.Application {
 		app.Logger().Info("admin username: ", admin["adminUsername"])
 	}
 
+	// ss, _ := userRepository.GetByUsername("t6oJq")
+	// println("username", ss.Username)
+
+	// tk, _ := userRepository.CreateToken(ss)
+	// println("token", tk)
+
+	// me, tok, st, e := userRepository.Authenticate("t6oJq", "dR7AniI2")
+	// userid := me.ID.String()
+	// println("status", st)
+	// println("error", e)
+	// println("token", tok)
+	// println("User ID", userid)
+
 	api := app.Party("/api")
 	{
-		mvc.New(api.Party("/signup")).Register(runtime.DB).Handle(new(user.Signup))
 		mvc.New(api.Party("/signin")).Register(runtime.DB).Handle(new(user.Signin))
 		mvc.New(api.Party("/users")).Register(userRepository).Handle(new(user.Controller))
 		mvc.New(api.Party("/apps")).Register(runtime.DB).Handle(new(user.Controller))

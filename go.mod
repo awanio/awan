@@ -41,6 +41,7 @@ require (
 	github.com/iris-contrib/formBinder v5.0.0+incompatible // indirect
 	github.com/iris-contrib/httpexpect/v2 v2.0.5 // indirect
 	github.com/iris-contrib/jade v1.1.4 // indirect
+	github.com/iris-contrib/middleware/jwt v0.0.0-20201017024110-39b50ffeb885
 	github.com/iris-contrib/pongo2 v0.0.1 // indirect
 	github.com/iris-contrib/schema v0.0.6 // indirect
 	github.com/jinzhu/gorm v1.9.16
