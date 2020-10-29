@@ -1,6 +1,7 @@
 package user
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/kataras/iris/v12"
@@ -8,20 +9,20 @@ import (
 
 // Controller users
 type Controller struct {
-	repo RepositoryUsers
+	Repo RepositoryUsers
 }
 
 // Get method
 func (m *Controller) Get(ctx iris.Context) {
 
 	// result, err := m.Users.Get()
-	// me, err := m.repo.Get()
+	me, err := m.Repo.Get()
 
-	// if err != nil {
-	// 	fmt.Println(err.Error())
-	// }
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 
-	// println(me.Name)
+	println(me.Name)
 
 	// if err != nil {
 	// 	ctx.JSON(iris.Map{

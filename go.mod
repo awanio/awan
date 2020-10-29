@@ -18,6 +18,7 @@ require (
 	github.com/flosch/pongo2/v4 v4.0.0 // indirect
 	github.com/gavv/httpexpect v2.0.0+incompatible // indirect
 	github.com/gliderlabs/ssh v0.3.1
+	github.com/go-delve/delve v1.5.0 // indirect
 	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible // indirect
 	github.com/go-redis/redis/v8 v8.2.3 // indirect
 	github.com/gobuffalo/attrs v1.0.0 // indirect
@@ -31,6 +32,7 @@ require (
 	github.com/gobuffalo/validate v2.0.4+incompatible // indirect
 	github.com/gofrs/uuid v3.3.0+incompatible
 	github.com/gomodule/redigo v1.7.1-0.20190724094224-574c33c3df38 // indirect
+	github.com/google/go-dap v0.3.0 // indirect
 	github.com/google/uuid v1.1.2 // indirect
 	github.com/gookit/color v1.3.1 // indirect
 	github.com/gorilla/schema v1.1.0 // indirect
@@ -53,11 +55,15 @@ require (
 	github.com/klauspost/compress v1.11.1 // indirect
 	github.com/lib/pq v1.8.0 // indirect
 	github.com/mailru/easyjson v0.7.6 // indirect
+	github.com/mattn/go-colorable v0.1.8 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.4 // indirect
 	github.com/moul/http2curl v1.0.0 // indirect
 	github.com/nicksnyder/go-i18n/v2 v2.1.1 // indirect
+	github.com/peterh/liner v1.2.0 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/ryanuber/columnize v2.1.0+incompatible // indirect
+	github.com/sirupsen/logrus v1.7.0 // indirect
+	github.com/spf13/cobra v1.1.1 // indirect
 	github.com/square/go-jose/v3 v3.0.0-20200630053402-0a67ce9b0693 // indirect
 	github.com/tdewolff/minify/v2 v2.9.7 // indirect
 	github.com/valyala/fasthttp v1.16.0 // indirect
@@ -65,11 +71,13 @@ require (
 	github.com/xxjwxc/gormt v0.0.0-20200928171410-02ae0bc01c67 // indirect
 	github.com/yosssi/ace v0.0.5 // indirect
 	go.etcd.io/bbolt v1.3.5 // indirect
+	go.starlark.net v0.0.0-20201014215153-dff0ae5b4820 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.16.0 // indirect
+	golang.org/x/arch v0.0.0-20201008161808-52c3e6f60cff // indirect
 	golang.org/x/crypto v0.0.0-20201016220609-9e8e0b390897 // indirect
 	golang.org/x/net v0.0.0-20201002202402-0a1ea396d57c // indirect
-	golang.org/x/sys v0.0.0-20201024232916-9f70ab9862d5 // indirect
+	golang.org/x/sys v0.0.0-20201029020603-3518587229cd // indirect
 	golang.org/x/time v0.0.0-20200630173020-3af7569d3a1e // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	google.golang.org/protobuf v1.25.0 // indirect
