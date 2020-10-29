@@ -36,17 +36,26 @@ func (m *Signin) Post(ctx iris.Context) {
 		})
 	}
 
+	println(status)
 	if !status {
 		ctx.JSON(iris.Map{
 			"code":  http.StatusUnauthorized,
 			"error": "login fail",
 		})
+		return
 	}
 
 	ctx.JSON(
 		iris.Map{
-			"code":  http.StatusOK,
-			"data":  me,
-			"token": token,
+			"code": http.StatusOK,
+			"data": map[string]interface{}{
+				"user": map[string]interface{}{
+					"id":       me.ID,
+					"username": me.Username,
+					"name":     me.Name,
+					"status":   me.Status,
+				},
+				"token": token,
+			},
 		})
 }

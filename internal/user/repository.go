@@ -130,9 +130,19 @@ func (m *RepositoryUser) Authenticate(username string, password string) (Users, 
 		return existingUser, "", false, result.Error
 	}
 
+	if !m.checkPasswordHash(password, credential.UserKey) {
+		return existingUser, "", false, nil
+	}
+
 	jwtToken, _ := m.CreateToken(existingUser)
 
 	return existingUser, jwtToken, true, nil
+}
+
+func (m *RepositoryUser) checkPasswordHash(password, hash string) bool {
+
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
 }
 
 // CreateToken ...
