@@ -1,8 +1,11 @@
 package user
 
 import (
+	"fmt"
+
 	"github.com/awanio/awan/internal/env"
 	"github.com/awanio/awan/pkg/helper"
+	"github.com/gofrs/uuid"
 	"github.com/iris-contrib/middleware/jwt"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
@@ -40,6 +43,20 @@ func (m *RepositoryUser) Get() (Users, error) {
 	}
 
 	return existingUser, nil
+}
+
+// Create for a user
+func (m *RepositoryUser) Create(newUser Input) (Users, bool, error) {
+
+	// does this username exists?
+	existingUser, err := m.GetByUsername(newUser.Username)
+
+	if err == nil {
+		// yes, username with this value exists
+		return existingUser, false, nil
+	}
+
+	return existingUser, true, nil
 }
 
 // CreateAdmin for the first time only
@@ -108,9 +125,28 @@ func (m *RepositoryUser) CreateAdmin() (map[string]string, bool, error) {
 // GetByUsername ...
 func (m *RepositoryUser) GetByUsername(username string) (Users, error) {
 
+	return m.GetBy("username", username)
+}
+
+// GetByEmail ...
+func (m *RepositoryUser) GetByEmail(email string) (Users, error) {
+
+	return m.GetBy("email", email)
+}
+
+// GetByID ...
+func (m *RepositoryUser) GetByID(uuid uuid.UUID) (Users, error) {
+
+	return m.GetBy("id", uuid.String())
+}
+
+// GetBy ...
+func (m *RepositoryUser) GetBy(column, value string) (Users, error) {
+
 	var existingUser Users
 
-	result := m.DB.Where("username = ?", username).First(&existingUser)
+	where := fmt.Sprintf("%s = ?", column)
+	result := m.DB.Where(where, value).First(&existingUser)
 
 	if result.Error != nil {
 		return existingUser, result.Error
