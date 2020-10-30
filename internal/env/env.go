@@ -33,6 +33,8 @@ var (
 	DBMaxOpenConns int
 	// DBMaxIdleConns var
 	DBMaxIdleConns int
+	// JWTSecret var
+	JWTSecret string
 )
 
 func parse() {
@@ -51,6 +53,8 @@ func parse() {
 	dbMaxIdleConns := getDefault("DB_MAX_IDLE_CONNS", "30")
 	maxIdle, _ := strconv.Atoi(dbMaxIdleConns)
 	DBMaxIdleConns = maxIdle
+
+	JWTSecret = getDefault("JWT_SECRET", "")
 
 }
 

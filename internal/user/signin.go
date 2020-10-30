@@ -23,8 +23,8 @@ func (m *Signin) Post(ctx iris.Context) {
 	var login Login
 
 	if err := ctx.ReadJSON(&login); err != nil {
+		println(err.Error())
 		ctx.StopWithError(iris.StatusBadRequest, err)
-		return
 	}
 
 	me, token, status, er := m.Repo.Authenticate(login.Username, login.Password)
@@ -34,9 +34,9 @@ func (m *Signin) Post(ctx iris.Context) {
 			"code":  http.StatusBadRequest,
 			"error": er.Error,
 		})
+		return
 	}
 
-	println(status)
 	if !status {
 		ctx.JSON(iris.Map{
 			"code":  http.StatusUnauthorized,

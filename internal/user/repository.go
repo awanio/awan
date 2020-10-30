@@ -1,6 +1,7 @@
 package user
 
 import (
+	"github.com/awanio/awan/internal/env"
 	"github.com/awanio/awan/pkg/helper"
 	"github.com/iris-contrib/middleware/jwt"
 	"golang.org/x/crypto/bcrypt"
@@ -154,6 +155,6 @@ func (m *RepositoryUser) CreateToken(user Users) (string, error) {
 	})
 
 	// Sign and get the complete encoded token as a string using the secret
-	return token.SignedString([]byte("My Secret"))
+	return token.SignedString([]byte(env.JWTSecret))
 
 }
