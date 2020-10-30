@@ -71,9 +71,11 @@ func (m *RepositoryUser) CreateAdmin() (map[string]string, bool, error) {
 		ForgotPasswordCode: forgotPasswordCode,
 	}
 
-	create := m.DB.Create(&admin)
+	tx := m.DB.Begin()
+	create := tx.Create(&admin)
 
 	if create.Error != nil {
+		tx.Rollback()
 		return resp, false, create.Error
 
 	}
@@ -82,6 +84,7 @@ func (m *RepositoryUser) CreateAdmin() (map[string]string, bool, error) {
 	hashedPasswd, erro := bcrypt.GenerateFromPassword(passwd, bcrypt.DefaultCost)
 
 	if erro != nil {
+		tx.Rollback()
 		return resp, false, erro
 	}
 
@@ -93,10 +96,12 @@ func (m *RepositoryUser) CreateAdmin() (map[string]string, bool, error) {
 	})
 
 	if result.Error != nil {
+		tx.Rollback()
 		return resp, false, result.Error
 
 	}
 
+	tx.Commit()
 	return resp, true, nil
 }
 
