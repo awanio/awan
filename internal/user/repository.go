@@ -21,6 +21,8 @@ type RepositoryUser struct {
 type RepositoryUsers interface {
 	Get() (user Users, err error)
 	Authenticate(string, string) (Users, string, bool, error)
+	CreateAdmin() (map[string]string, bool, error)
+	CreateToken(user Users) (string, error)
 }
 
 // NewRepository ...

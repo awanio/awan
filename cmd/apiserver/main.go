@@ -13,6 +13,11 @@ import (
 	"github.com/kataras/iris/v12/mvc"
 )
 
+var (
+	// UserRepository ...
+	UserRepository user.RepositoryUsers
+)
+
 func newApp() *iris.Application {
 
 	app := iris.Default()
@@ -41,9 +46,9 @@ func newApp() *iris.Application {
 		return nil
 	}
 
-	userRepository := user.NewRepository(runtime.DB)
+	UserRepository = user.NewRepository(runtime.DB)
 	// Generate admin user
-	admin, creationStatus, err := userRepository.CreateAdmin()
+	admin, creationStatus, err := UserRepository.CreateAdmin()
 
 	if err != nil {
 		app.Logger().Fatalf(err.Error())
@@ -64,7 +69,7 @@ func newApp() *iris.Application {
 	app.UseGlobal(crs)
 
 	// exclude from auth middleware
-	mvc.New(app.Party("/api/signin")).Register(userRepository).Handle(new(user.Signin))
+	mvc.New(app.Party("/api/signin")).Register(UserRepository).Handle(new(user.Signin))
 
 	var mySecret = []byte(env.JWTSecret)
 
@@ -78,7 +83,7 @@ func newApp() *iris.Application {
 	api := app.Party("/api")
 	{
 		api.Use(j.Serve)
-		mvc.New(api.Party("/users")).Register(userRepository).Handle(new(user.Controller))
+		mvc.New(api.Party("/users")).Register(UserRepository).Handle(new(user.Controller))
 		mvc.New(api.Party("/apps")).Register(runtime.DB).Handle(new(user.Controller))
 		mvc.New(api.Party("/resources")).Register(runtime.DB).Handle(new(user.Controller))
 		mvc.New(api.Party("/teams")).Register(runtime.DB).Handle(new(user.Controller))

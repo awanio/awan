@@ -20,7 +20,7 @@ func (m *Controller) Get(ctx iris.Context) {
 	// 	fmt.Println(err.Error())
 	// }
 
-	println(me.Name)
+	// println(me.Name)
 
 	if err != nil {
 		ctx.JSON(iris.Map{
