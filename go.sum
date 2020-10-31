@@ -333,6 +333,8 @@ github.com/iris-contrib/jade v1.1.3/go.mod h1:H/geBymxJhShH5kecoiOCSssPX7QWYH7Ua
 github.com/iris-contrib/jade v1.1.4 h1:WoYdfyJFfZIUgqNAeOyRfTNQZOksSlZ6+FnXR3AEpX0=
 github.com/iris-contrib/jade v1.1.4/go.mod h1:EDqR+ur9piDl6DUgs6qRrlfzmlx/D5UybogqrXvJTBE=
 github.com/iris-contrib/middleware v12.1.2+incompatible h1:c1cZShMYVo3qlprxmNvidMZ8JJgDzFLkSrQqKdaVTTg=
+github.com/iris-contrib/middleware/cors v0.0.0-20201017024110-39b50ffeb885 h1:UfXR8bXD63nMagIl/q6dgTlcFMLuuZ4mLsaJRY6H+m0=
+github.com/iris-contrib/middleware/cors v0.0.0-20201017024110-39b50ffeb885/go.mod h1:2QqFlCugfbeZvwOVZk/pQEjXxWoMY4I65rTPuC8rcms=
 github.com/iris-contrib/middleware/jwt v0.0.0-20201017024110-39b50ffeb885 h1:gXinoi3Kuk/4ymWRD57YRzUar7bSVaTMBSBrox/sDZA=
 github.com/iris-contrib/middleware/jwt v0.0.0-20201017024110-39b50ffeb885/go.mod h1:HP/vx0+2ijR2ixf5AvC0tOHhTBQH9vttTa4jD3PLqlc=
 github.com/iris-contrib/pongo2 v0.0.1 h1:zGP7pW51oi5eQZMIlGA3I+FHY9/HOQWDB+572yin0to=
