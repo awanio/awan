@@ -57,7 +57,7 @@ func newApp() *iris.Application {
 
 	// cors middleware
 	crs := cors.New(cors.Options{
-		AllowedOrigins:   []string{"*"}, // allows everything, use that to change the hosts.
+		AllowedOrigins:   []string{"*"},
 		AllowCredentials: false,
 	})
 
@@ -78,7 +78,6 @@ func newApp() *iris.Application {
 	api := app.Party("/api")
 	{
 		api.Use(j.Serve)
-
 		mvc.New(api.Party("/users")).Register(userRepository).Handle(new(user.Controller))
 		mvc.New(api.Party("/apps")).Register(runtime.DB).Handle(new(user.Controller))
 		mvc.New(api.Party("/resources")).Register(runtime.DB).Handle(new(user.Controller))
