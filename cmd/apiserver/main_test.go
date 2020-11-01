@@ -19,15 +19,12 @@ func TestNewApp(t *testing.T) {
 	app := newApp()
 	e := httptest.New(t, app)
 
-	factoryUser()
-
-	me, _ := UserRepository.Get()
-	strToken, _ := UserRepository.CreateToken(me)
+	_, strToken, credential, _ := factoryUser()
 
 	var (
 		expectedPayload = user.Login{
-			Username: "Durgan5843",
-			Password: "*q3N%+lZnu",
+			Username: credential["username"],
+			Password: credential["password"],
 		}
 
 		expectedLogin = map[string]interface{}{
@@ -49,29 +46,37 @@ func TestNewApp(t *testing.T) {
 }
 
 // create test user
-func factoryUser() (user.Users, error) {
+func factoryUser() (user.Users, string, map[string]string, error) {
 
 	gofakeit.Seed(0)
 
+	username := gofakeit.Username()
+	password := gofakeit.Password(true, true, true, true, false, 10)
+	credential := map[string]string{
+		"username": username,
+		"password": password,
+	}
+
 	newUser := user.Input{
-		Username: gofakeit.Username(),
+		Username: username,
 		Name:     gofakeit.Name(),
 		Email:    gofakeit.Email(),
-		Password: gofakeit.Password(true, true, true, true, false, 10),
+		Password: password,
 	}
 
 	createdUser, status, err := UserRepository.Create(newUser)
 
 	if err != nil {
 		println("Error: ", err.Error())
-		return createdUser, err
+		return createdUser, "", credential, err
 	}
+
+	strToken, _ := UserRepository.CreateToken(createdUser)
 
 	if status {
-		println("user ID: ", createdUser.ID.String())
-		return createdUser, nil
+		return createdUser, strToken, credential, nil
 	}
 
-	return createdUser, err
+	return createdUser, "", credential, err
 
 }
