@@ -5,6 +5,7 @@ import (
 
 	"github.com/awanio/awan/internal/env"
 	"github.com/awanio/awan/pkg/helper"
+	"github.com/brianvoe/gofakeit/v5"
 	"github.com/gofrs/uuid"
 	"github.com/iris-contrib/middleware/jwt"
 	"golang.org/x/crypto/bcrypt"
@@ -23,6 +24,7 @@ type RepositoryUsers interface {
 	Authenticate(string, string) (Users, string, bool, error)
 	CreateAdmin() (map[string]string, bool, error)
 	CreateToken(user Users) (string, error)
+	Create(newUser Input) (Users, bool, error)
 }
 
 // NewRepository ...
@@ -58,16 +60,67 @@ func (m *RepositoryUser) Create(newUser Input) (Users, bool, error) {
 		return existingUser, false, nil
 	}
 
-	return existingUser, true, nil
+	// does this email exists?
+	existingEmail, err := m.GetByEmail(newUser.Email)
+
+	if err == nil {
+		// yes, email with this value exists
+		return existingEmail, false, nil
+	}
+
+	verificationCode, _ := helper.GenerateRandomString(8)
+	forgotPasswordCode, _ := helper.GenerateRandomString(8)
+
+	var user = Users{
+		Username:           newUser.Username,
+		Name:               newUser.Name,
+		Status:             "active",
+		VerificationCode:   verificationCode,
+		ForgotPasswordCode: forgotPasswordCode,
+	}
+
+	tx := m.DB.Begin()
+	create := tx.Create(&user)
+
+	if create.Error != nil {
+		tx.Rollback()
+		return existingUser, false, create.Error
+
+	}
+
+	passwd := []byte(newUser.Password)
+	hashedPasswd, erro := bcrypt.GenerateFromPassword(passwd, bcrypt.DefaultCost)
+
+	if erro != nil {
+		tx.Rollback()
+		return user, false, erro
+	}
+
+	result := tx.Create(&Credentials{
+		UserID:  user.ID,
+		Type:    "password",
+		UserKey: string(hashedPasswd),
+		Status:  "active",
+	})
+
+	if result.Error != nil {
+		tx.Rollback()
+		return user, false, result.Error
+
+	}
+
+	tx.Commit()
+
+	return user, true, nil
 }
 
 // CreateAdmin for the first time only
 func (m *RepositoryUser) CreateAdmin() (map[string]string, bool, error) {
 
-	verificationCode, _ := helper.GenerateRandomString(8)
-	forgotPasswordCode, _ := helper.GenerateRandomString(8)
-	adminPassword, _ := helper.GenerateRandomString(8)
-	adminUsername, _ := helper.GenerateRandomString(5)
+	gofakeit.Seed(0)
+
+	adminPassword := gofakeit.Password(true, true, true, true, false, 10)
+	adminUsername := gofakeit.Username()
 
 	resp := map[string]string{
 		"adminPassword": adminPassword,
@@ -82,45 +135,23 @@ func (m *RepositoryUser) CreateAdmin() (map[string]string, bool, error) {
 		return resp, false, result.Error
 	}
 
-	var admin = Users{
-		Username:           adminUsername,
-		Name:               "Admin",
-		Status:             "active",
-		VerificationCode:   verificationCode,
-		ForgotPasswordCode: forgotPasswordCode,
+	var admin = Input{
+		Username: adminUsername,
+		Name:     "Admin",
+		Email:    "active",
+		Password: adminPassword,
 	}
 
-	tx := m.DB.Begin()
-	create := tx.Create(&admin)
+	_, status, err := m.Create(admin)
 
-	if create.Error != nil {
-		tx.Rollback()
-		return resp, false, create.Error
-
+	if !status {
+		return resp, false, err
 	}
 
-	passwd := []byte(adminPassword)
-	hashedPasswd, erro := bcrypt.GenerateFromPassword(passwd, bcrypt.DefaultCost)
-
-	if erro != nil {
-		tx.Rollback()
-		return resp, false, erro
+	if err != nil {
+		return resp, false, err
 	}
 
-	result = m.DB.Create(&Credentials{
-		UserID:  admin.ID,
-		Type:    "password",
-		UserKey: string(hashedPasswd),
-		Status:  "active",
-	})
-
-	if result.Error != nil {
-		tx.Rollback()
-		return resp, false, result.Error
-
-	}
-
-	tx.Commit()
 	return resp, true, nil
 }
 
