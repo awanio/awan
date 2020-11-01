@@ -25,6 +25,7 @@ type RepositoryUsers interface {
 	CreateAdmin() (map[string]string, bool, error)
 	CreateToken(user Users) (string, error)
 	Create(newUser Input) (Users, bool, error)
+	Delete(uuid uuid.UUID)
 }
 
 // NewRepository ...
@@ -47,6 +48,15 @@ func (m *RepositoryUser) Get() (Users, error) {
 	}
 
 	return existingUser, nil
+}
+
+// Delete a user
+func (m *RepositoryUser) Delete(uuid uuid.UUID) {
+
+	tx := m.DB.Begin()
+	tx.Delete(&Users{}, uuid)
+	tx.Where("user_id = ?", uuid).Delete(&Credentials{}, uuid)
+	tx.Commit()
 }
 
 // Create for a user

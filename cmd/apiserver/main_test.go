@@ -19,7 +19,7 @@ func TestNewApp(t *testing.T) {
 	app := newApp()
 	e := httptest.New(t, app)
 
-	_, strToken, credential, _ := factoryUser()
+	me, strToken, credential, _ := factoryUser()
 
 	var (
 		expectedPayload = user.Login{
@@ -43,6 +43,8 @@ func TestNewApp(t *testing.T) {
 	e.GET("/").Expect().Status(httptest.StatusOK)
 	e.POST("/api/signin").WithJSON(expectedPayload).Expect().Status(httptest.StatusOK).JSON().Object().ContainsMap(expectedLogin)
 	e.GET("/api/users").WithHeader("Authorization", jwtToken).Expect().Status(httptest.StatusOK)
+
+	UserRepository.Delete(me.ID)
 }
 
 // create test user
