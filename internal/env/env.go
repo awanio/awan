@@ -11,6 +11,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/awanio/awan/pkg/helper"
 	"github.com/joho/godotenv"
 )
 
@@ -39,7 +40,7 @@ var (
 
 func parse() {
 	DBType = getDefault("DB_TYPE", "sqlite3")
-	DBPath = getDefault("DB_PATH", "test.db")
+	DBPath = helper.FromBasepath(getDefault("DB_PATH", "awan.db"))
 	// dbHost format should: host:port
 	DBHost = getDefault("DB_HOST", "127.0.0.1:5432")
 	DBName = getDefault("DB_NAME", "awan")
